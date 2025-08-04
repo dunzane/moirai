@@ -3,7 +3,7 @@ name: PyPI Publish
 on:
   push:
     tags:
-      - 'v*'  # only tag to publish
+      - 'v*'
 
 jobs:
   test:

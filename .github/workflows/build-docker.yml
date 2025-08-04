@@ -1,18 +1,14 @@
-name: Build Docker Image
+name: Build and Push Docker Images
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-
+    tags:
+      - 'v*'
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: startsWith(github.event.ref, 'refs/tags')
+    if: startsWith(github.ref, 'refs/tags/v')
 
     strategy:
       matrix:
@@ -28,32 +24,31 @@ jobs:
           - "1.12.1-py3.9.12-cuda11.6.2-ubuntu20.04"
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Get version
         id: get_version
         run: |
-          echo "MOIRAI_VERSION=`cd moirai && python -c '''from version import __version__; print(__version__)'''`" >> >> $GITHUB_ENV
+          MOIRAI_VERSION=$(cd moirai && python -c "from version import __version__; print(__version__)")
+          echo "MOIRAI_VERSION=$MOIRAI_VERSION" >> $GITHUB_ENV
           echo "IMAGE_TAG=${{ matrix.base-image-tag }}" >> $GITHUB_ENV
-          
-      - name: Login DockerHub
-        run: docker login --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build docker image
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Docker image
         run: |
           docker build \
-          --build-arg IMAGE_TAG=${IMAGE_TAG} \
-          -t dunzane/moirai:${MOIRAI_VERSION}-${IMAGE_TAG} \
-          -f docker/Dockerfile \
-          .
+            --build-arg IMAGE_TAG=${IMAGE_TAG} \
+            -t dunzane/moirai:${MOIRAI_VERSION}-${IMAGE_TAG} \
+            -t dunzane/moirai:latest-${IMAGE_TAG} \
+            -f docker/Dockerfile \
+            .
 
-      - name: Push docker image
-        run: docker push dunzane/moirai:${MOIRAI_VERSION}-${IMAGE_TAG} \
-
-
-
-
-
-
-
-
+      - name: Push Docker image
+        run: |
+          docker push dunzane/moirai:${MOIRAI_VERSION}-${IMAGE_TAG}
+          docker push dunzane/moirai:latest-${IMAGE_TAG}
