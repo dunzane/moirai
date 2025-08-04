@@ -12,7 +12,8 @@ COPY . /tmp/moirai
 RUN set -eux; \
     cd /tmp/moirai && \
     pip install --upgrade pip && \
-    pip install -r requirements.txt && \
-    rm -rf .eggs && \
-    python setup.py install && \
+    pip install hatch && \
+    rm -rf *.egg-info .eggs build dist && \
+    hatch build && \
+    pip install dist/*.whl && \
     rm -rf /tmp/moirai
