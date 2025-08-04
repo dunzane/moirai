@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 
 [project]
-name = "moirai"
+name = "moirai-ts"
 description = "Simple and powerful deep learning pipeline framework under pytorch."
 readme = "README.md"
 license = { text = "Apache License 2.0" }
