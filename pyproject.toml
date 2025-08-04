@@ -1,0 +1,52 @@
+[build-system]
+requires = ["hatchling>=1.24.2", "hatch-vcs>=0.3.0"]
+build-backend = "hatchling.build"
+
+
+[project]
+name = "moirai"
+description = "Simple and powerful deep learning pipeline framework under pytorch."
+readme = "README.md"
+license = { text = "Apache License 2.0" }
+requires-python = ">=3.7"
+keywords = ["pytorch", "deep learning"]
+authors = [
+  { name = "dunzane", email = "dunzane@outlook.com" }
+]
+classifiers = [
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Topic :: Utilities"
+]
+dependencies = [
+  "tensorboard",
+  "torch>=1.4",
+  "tqdm",
+  "typer"
+]
+dynamic = ["version"]
+
+[project.urls]
+Tracker = "https://github.com/dunzane/moirai/issues"
+Source = "https://github.com/dunzane/moirai"
+
+[project.scripts]
+moirai = "cli.main:app"
+
+[tool.hatch.version]
+path = "moirai/version.py"
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+  "/.github",
+  "/scripts",
+  "/examples",
+  "/tests"
+]
+
+[tool.hatch.metadata]
+allow-direct-references = true
