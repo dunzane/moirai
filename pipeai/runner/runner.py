@@ -13,16 +13,16 @@ from torch.utils.tensorboard import SummaryWriter
 from torch.nn.parallel import DistributedDataParallel as DDP
 from tqdm import tqdm
 
-from moirai.checkpoint import get_ckpt_save_dir, backup_last_ckpt, save_ckpt, clear_ckpt, load_ckpt
-from moirai.config import Config
-from moirai.data import build_data_loader_ddp, build_data_loader, DevicePrefetcher
-from moirai.dist import get_local_rank, master_only, is_master
-from moirai.evaluator import MeterPool
-from moirai.logging import get_logger
-from moirai.optim.builder import build_optim, build_lr_scheduler
-from moirai.utils import set_env
-from moirai.device import to_device
-from moirai.utils.timer import TimePredictor
+from pipeai.checkpoint import get_ckpt_save_dir, backup_last_ckpt, save_ckpt, clear_ckpt, load_ckpt
+from pipeai.config import Config
+from pipeai.data import build_data_loader_ddp, build_data_loader, DevicePrefetcher
+from pipeai.dist import get_local_rank, master_only, is_master
+from pipeai.evaluator import MeterPool
+from pipeai.logging import get_logger
+from pipeai.optim.builder import build_optim, build_lr_scheduler
+from pipeai.utils import set_env
+from pipeai.device import to_device
+from pipeai.utils.timer import TimePredictor
 
 
 class Runner:
@@ -37,7 +37,7 @@ class Runner:
         self.cfg = copy.deepcopy(cfg)
 
         # Default logger
-        self.logger = get_logger('moirai')
+        self.logger = get_logger('pipeai')
 
         # Set environment variables
         set_env(cfg.get('ENV', {}))

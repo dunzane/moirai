@@ -5,8 +5,8 @@ from torch import nn
 from torch.utils.data import Dataset
 
 from examples.linear_regression.dataset import LinearDataset
-from moirai import Runner, Config
-from moirai.device import to_device
+from pipeai import Runner, Config
+from pipeai.device import to_device
 
 
 class LinearRegressionRunner(Runner):

@@ -3,8 +3,9 @@ requires = ["hatchling>=1.24.2", "hatch-vcs>=0.3.0"]
 build-backend = "hatchling.build"
 
 
+
 [project]
-name = "moirai"
+name = "pipeai"
 description = "Simple and powerful deep learning pipeline framework under pytorch."
 readme = "README.md"
 license = { text = "Apache License 2.0" }
@@ -31,14 +32,17 @@ dependencies = [
 dynamic = ["version"]
 
 [project.urls]
-Tracker = "https://github.com/dunzane/moirai/issues"
-Source = "https://github.com/dunzane/moirai"
+Tracker = "https://github.com/dunzane/pipeai/issues"
+Source = "https://github.com/dunzane/pipeai"
 
 [project.scripts]
 moirai = "cli.main:app"
 
 [tool.hatch.version]
-path = "moirai/version.py"
+path = "pipeai/version.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["pipeai"]
 
 [tool.hatch.build.targets.sdist]
 exclude = [

@@ -7,11 +7,11 @@ import numpy as np
 import torch
 from packaging.version import parse as parse_version
 
-from moirai.device import get_device_type, set_device_manual_seed
-from moirai.dist import get_rank
-from moirai.logging import get_logger
+from pipeai.device import get_device_type, set_device_manual_seed
+from pipeai.dist import get_rank
+from pipeai.logging import get_logger
 
-_DEFAULT_ENV_LOGGER = get_logger('moirai-utils-env')
+_DEFAULT_ENV_LOGGER = get_logger('pipeai-utils-env')
 
 
 def set_tf32_mode(tf32_mode: bool):

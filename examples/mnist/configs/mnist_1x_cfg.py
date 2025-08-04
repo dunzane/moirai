@@ -1,5 +1,5 @@
 import os
-from moirai import Config
+from pipeai import Config
 
 from examples.mnist.mnist_runner import MNISTRunner
 

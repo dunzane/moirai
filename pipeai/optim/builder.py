@@ -4,8 +4,8 @@ from torch import nn, optim
 from torch.optim import lr_scheduler
 
 
-import moirai.optim.custom.optim as moirai_optim
-import moirai.optim.custom.lr_scheduler as moirai_lr_scheduler
+import pipeai.optim.custom.optim as moirai_optim
+import pipeai.optim.custom.lr_scheduler as moirai_lr_scheduler
 
 
 def build_optim(

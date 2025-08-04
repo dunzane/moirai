@@ -4,7 +4,7 @@ from torch.utils.data import Dataset, DataLoader
 from torch.utils.data.distributed import DistributedSampler
 
 from .perfetcher import DataLoaderX
-from moirai.dist import get_rank, get_world_size
+from pipeai.dist import get_rank, get_world_size
 
 
 def build_data_loader(

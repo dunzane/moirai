@@ -10,8 +10,8 @@ import importlib.util
 from datetime import datetime
 from typing import Dict, Set, List, Union, Any, TypeVar
 
-from moirai.checkpoint import get_ckpt_save_dir
-from moirai.config import Config
+from pipeai.checkpoint import get_ckpt_save_dir
+from pipeai.config import Config
 
 TRAINING_INDEPENDENT_FLAG = '_TRAINING_INDEPENDENT'
 
