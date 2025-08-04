@@ -3,16 +3,17 @@ ARG IMAGE_TAG
 FROM cnstark/pytorch:${IMAGE_TAG}
 
 # --- Set version variables (for use in images) ---
-ARG MOIRAI_VERSION
-ENV MOIRAI_VERSION=${MOIRAI_VERSION}
+ARG PIPEAI_VERSION
+ENV PIPEAI_VERSION=${PIPEAI_VERSION}
 
 # --- Copy and install ---
-COPY . /tmp/moirai
+COPY . /tmp/pipeai
 
 RUN set -eux; \
-    cd /tmp/moirai && \
+    cd /tmp/pipeai && \
     pip install --upgrade pip && \
-    pip install -r requirements.txt && \
-    rm -rf .eggs && \
-    python setup.py install && \
-    rm -rf /tmp/moirai
+    pip install hatch && \
+    rm -rf *.egg-info .eggs build dist && \
+    hatch build && \
+    pip install dist/*.whl && \
+    rm -rf /tmp/pipeai

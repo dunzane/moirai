@@ -8,9 +8,9 @@ from typing import Dict, List, Tuple, Union, Optional
 
 import torch
 
-from moirai.logging import get_logger
+from pipeai.logging import get_logger
 
-_DEFAULT_CKPT_LOGGER = get_logger('moirai-checkpoint')
+_DEFAULT_CKPT_LOGGER = get_logger('pipeai-checkpoint')
 
 
 def get_ckpt_save_dir(cfg: Dict):

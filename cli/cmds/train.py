@@ -11,5 +11,5 @@ def run(
         devices: str = typer.Option(None, help="CUDA_VISIBLE_DEVICES"),
         node_rank: int = typer.Option(0, help="Distributed node rank")
 ):
-    from moirai import launch_training
+    from pipeai import launch_training
     launch_training(cfg, devices, node_rank)

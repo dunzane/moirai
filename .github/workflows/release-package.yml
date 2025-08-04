@@ -1,0 +1,65 @@
+name: Strict Tag Release Pipeline
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure .pypirc
+        run: |
+          cat > ~/.pypirc <<EOF
+          [distutils]
+          index-servers =
+              pypi
+          
+          [pypi]
+          repository: https://upload.pypi.org/legacy/
+          username: __token__
+          password: ${{ secrets.PYPI_TOKEN }}
+          EOF
+
+      - name: Verify tag is on main
+        run: |
+          git fetch origin main
+          if ! git branch -a --contains ${{ github.ref_name }} | grep -q 'origin/main'; then
+            echo "Error: Tag ${{ github.ref_name }} is not on main branch!"
+            exit 1
+          fi
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.8"
+
+      - name: Install build tools
+        run: pip install --upgrade hatch twine
+
+      - name: Build Python package
+        run: hatch build
+
+      - name: Publish to PyPI
+        run: twine upload --repository pypi dist/*
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          files: dist/*
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

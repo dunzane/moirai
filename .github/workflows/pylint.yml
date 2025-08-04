@@ -28,4 +28,4 @@ jobs:
         pip install -r requirements.txt
     - name: Lint
       run: |
-        pylint --fail-under=${FAIL_UNDER} easytorch examples tests setup.py
+        pylint --fail-under=${FAIL_UNDER} pipeai examples tests pyproject.toml

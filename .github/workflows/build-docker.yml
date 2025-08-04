@@ -1,18 +1,16 @@
-name: Build Docker Image
+name: Docker Build and Push (Strict Tag)
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-
+    tags:
+      - 'v*'
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: startsWith(github.event.ref, 'refs/tags')
+    permissions:
+      contents: write
+      packages: write
 
     strategy:
       matrix:
@@ -27,33 +25,49 @@ jobs:
           - "1.11.0-py3.9.12-cuda11.3.1-ubuntu20.04"
           - "1.12.1-py3.9.12-cuda11.6.2-ubuntu20.04"
 
+
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Get version
-        id: get_version
+      - name: Verify tag is on main branch
         run: |
-          echo "MOIRAI_VERSION=`cd moirai && python -c '''from version import __version__; print(__version__)'''`" >> >> $GITHUB_ENV
-          echo "IMAGE_TAG=${{ matrix.base-image-tag }}" >> $GITHUB_ENV
-          
-      - name: Login DockerHub
-        run: docker login --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }}
+          git fetch origin main
+          if ! git branch -a --contains ${{ github.ref_name }} | grep -q 'origin/main'; then
+            echo "Error: Tag ${{ github.ref_name }} is not on main branch!"
+            exit 1
+          fi
 
-      - name: Build docker image
+      - name: Set PIPEAI version
+        run: |
+          PIPEAI_VERSION=$(cd pipeai && python -c "from version import __version__; print(__version__)")
+          echo "PIPEAI_VERSION=$PIPEAI_VERSION" >> $GITHUB_ENV
+          echo "IMAGE_TAG=${{ matrix.base-image-tag }}" >> $GITHUB_ENV
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker image
         run: |
           docker build \
-          --build-arg IMAGE_TAG=${IMAGE_TAG} \
-          -t dunzane/moirai:${MOIRAI_VERSION}-${IMAGE_TAG} \
-          -f docker/Dockerfile \
-          .
+            --build-arg IMAGE_TAG=${IMAGE_TAG} \
+            -t dunzane/pipeai:${PIPEAI_VERSION}-${IMAGE_TAG} \
+            -t dunzane/pipeai:latest-${IMAGE_TAG} \
+            -f Dockerfile .
+          
+          docker push dunzane/pipeai:${PIPEAI_VERSION}-${IMAGE_TAG}
+          docker push dunzane/pipeai:latest-${IMAGE_TAG}
 
-      - name: Push docker image
-        run: docker push dunzane/moirai:${MOIRAI_VERSION}-${IMAGE_TAG} \
-
-
-
-
-
-
-
-
+      - name: Push image to GitHub Package
+        run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          
+          docker tag dunzane/pipeai:${PIPEAI_VERSION}-${IMAGE_TAG} ghcr.io/dunzane/pipeai:${PIPEAI_VERSION}-${IMAGE_TAG}
+          docker tag dunzane/pipeai:latest-${IMAGE_TAG} ghcr.io/dunzane/pipeai:latest-${IMAGE_TAG}
+          
+          docker push ghcr.io/dunzane/pipeai:${PIPEAI_VERSION}-${IMAGE_TAG}
+          docker push ghcr.io/dunzane/pipeai:latest-${IMAGE_TAG}

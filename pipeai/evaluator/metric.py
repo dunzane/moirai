@@ -1,9 +1,9 @@
 # pylint: disable=unnecessary-lambda-assignment
 from torch.utils.tensorboard import SummaryWriter
 
-from moirai.logging import get_logger
+from pipeai.logging import get_logger
 
-_DEFAULT_metric_LOGGER = get_logger('moirai-metric')
+_DEFAULT_metric_LOGGER = get_logger('pipeai-metric')
 
 
 class AvgMeter(object):
