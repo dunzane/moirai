@@ -42,7 +42,7 @@ jobs:
             --build-arg IMAGE_TAG=${IMAGE_TAG} \
             -t dunzane/moirai:${MOIRAI_VERSION}-${IMAGE_TAG} \
             -t dunzane/moirai:latest-${IMAGE_TAG} \
-            -f docker/Dockerfile \
+            -f Dockerfile \
             .
 
       - name: Push Docker image
