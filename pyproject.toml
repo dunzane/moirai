@@ -3,8 +3,9 @@ requires = ["hatchling>=1.24.2", "hatch-vcs>=0.3.0"]
 build-backend = "hatchling.build"
 
 
+
 [project]
-name = "moirai"
+name = "moirai-ts"
 description = "Simple and powerful deep learning pipeline framework under pytorch."
 readme = "README.md"
 license = { text = "Apache License 2.0" }
@@ -39,6 +40,9 @@ moirai = "cli.main:app"
 
 [tool.hatch.version]
 path = "moirai/version.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["moirai"]
 
 [tool.hatch.build.targets.sdist]
 exclude = [
