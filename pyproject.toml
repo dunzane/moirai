@@ -39,9 +39,6 @@ Source = "https://github.com/dunzane/pipeai"
 pipeai = "cli.main:app"
 
 [tool.hatch.version]
-source = "vcs"
-
-[tool.hatch.version]
 path = "pipeai/version.py"
 
 [tool.hatch.build.targets.wheel]
