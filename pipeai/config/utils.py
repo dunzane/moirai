@@ -4,7 +4,6 @@ import hashlib
 import json
 import os
 import shutil
-import sys
 import types
 import importlib.util
 from datetime import datetime

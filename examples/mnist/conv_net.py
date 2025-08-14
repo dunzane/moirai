@@ -3,7 +3,7 @@ from torch import nn
 
 class ConvNet(nn.Module):
     def __init__(self):
-        super(ConvNet, self).__init__()
+        super().__init__()
 
         self.conv_block = nn.Sequential(
             nn.Conv2d(1, 10, kernel_size=5),
