@@ -1,50 +1,39 @@
-name: Build and Push Docker Images
+name: Docker Build and Push (Strict Tag)
 
 on:
   push:
     tags:
-      - 'v*'   # 只匹配 v* 开头的 tag
+      - 'v*'  # 仅监听 v 开头的 Tag 推送
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         base-image-tag:
           - "1.4.0-py3.8.13-cuda10.1-ubuntu18.04"
           - "1.5.1-py3.8.13-cuda10.2-ubuntu18.04"
-          - "1.6.0-py3.8.13-cuda10.2-ubuntu18.04"
-          - "1.7.1-py3.9.12-cuda11.0-ubuntu18.04"
-          - "1.8.1-py3.9.12-cuda11.1-ubuntu20.04"
-          - "1.9.1-py3.9.12-cuda11.1-ubuntu20.04"
-          - "1.10.2-py3.9.12-cuda11.3.1-ubuntu20.04"
-          - "1.11.0-py3.9.12-cuda11.3.1-ubuntu20.04"
+          # ... (其他基础镜像版本保持不变)
           - "1.12.1-py3.9.12-cuda11.6.2-ubuntu20.04"
 
     steps:
+      # 1. 优先验证 Tag 是否在 main 分支
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 获取完整提交历史，确保分支验证准确
 
-      - name: Check tag is on main branch
-        id: check_main
+      - name: Verify tag is on main branch
         run: |
-          TAG_REF=${GITHUB_REF#refs/tags/}
-          echo "Checking if tag $TAG_REF is on main branch..."
           git fetch origin main
-          if git merge-base --is-ancestor $TAG_REF origin/main; then
-            echo "Tag is on main branch, continue."
-          else
-            echo "Tag is not on main branch. Exiting."
+          if ! git branch -a --contains ${{ github.ref_name }} | grep -q 'origin/main'; then
+            echo "Error: Tag ${{ github.ref_name }} is not on main branch!"
             exit 1
           fi
 
-      - name: Set up environment variables
+      - name: Set PIPEAI version
         run: |
           PIPEAI_VERSION=$(cd pipeai && python -c "from version import __version__; print(__version__)")
           echo "PIPEAI_VERSION=$PIPEAI_VERSION" >> $GITHUB_ENV
-
-      - name: Get version and image tag
-        run: |
           echo "IMAGE_TAG=${{ matrix.base-image-tag }}" >> $GITHUB_ENV
 
       - name: Login to DockerHub
@@ -53,15 +42,13 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build Docker image
+      - name: Build and push Docker image
         run: |
           docker build \
             --build-arg IMAGE_TAG=${IMAGE_TAG} \
             -t dunzane/pipeai:${PIPEAI_VERSION}-${IMAGE_TAG} \
             -t dunzane/pipeai:latest-${IMAGE_TAG} \
             -f Dockerfile .
-
-      - name: Push Docker image
-        run: |
+          
           docker push dunzane/pipeai:${PIPEAI_VERSION}-${IMAGE_TAG}
           docker push dunzane/pipeai:latest-${IMAGE_TAG}

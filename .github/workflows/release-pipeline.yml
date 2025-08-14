@@ -1,4 +1,4 @@
-name: Full Release Pipeline
+name: Strict Tag Release Pipeline
 
 on:
   push:
@@ -7,11 +7,19 @@ on:
 
 jobs:
   build-and-publish:
-    name: Build and Publish
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify tag is on main
+        run: |
+          git fetch origin main
+          if ! git branch -a --contains ${{ github.ref_name }} | grep -q 'origin/main'; then
+            echo "Error: Tag ${{ github.ref_name }} is not on main branch!"
+            exit 1
+          fi
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -19,41 +27,25 @@ jobs:
           python-version: "3.8"
 
       - name: Install build tools
-        run: |
-          pip install --upgrade hatch twine
+        run: pip install --upgrade hatch twine
 
-      - name: Check tag is on main branch
-        id: check_main
-        run: |
-          TAG_REF=${GITHUB_REF#refs/tags/}
-          echo "Checking if tag $TAG_REF is on main branch..."
-          git fetch origin main
-          if git merge-base --is-ancestor $TAG_REF origin/main; then
-            echo "Tag is on main branch, continue."
-          else
-            echo "Tag is not on main branch. Exiting."
-            exit 1
-          fi
-
-      - name: Build Python package using Hatch
+      - name: Build Python package
         run: hatch build
 
       - name: Publish to PyPI
-        run: |
-          twine upload dist/* -u __token__ -p ${{ secrets.PYPI_TOKEN }}
+        run: twine upload dist/* -u __token__ -p ${{ secrets.PYPI_TOKEN }}
 
       - name: Publish to GitHub Packages
         run: |
           twine upload \
-            --repository-url https://upload.pypi.pkg.github.com/${{ github.repository_owner }}/ \
+            --repository-url https://upload.pypi.org/legacy/ \
             dist/* \
-            -u ${{ github.actor }} \
-            -p ${{ secrets.GITHUB_TOKEN }}
+            -u __token__ \
+            -p ${{ secrets.PYPI_TOKEN }}
 
-      - name: Create GitHub Release and upload Python packages
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ github.ref_name }}
+          skip_if_tag_exists: true
           files: dist/*
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
