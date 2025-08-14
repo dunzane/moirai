@@ -5,6 +5,10 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+  packages: write
+
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
@@ -29,23 +33,39 @@ jobs:
       - name: Install build tools
         run: pip install --upgrade hatch twine
 
+      - name: Verify version
+        run: |
+          echo "Building version: $(hatch version)"
+          echo "Git tag: ${{ github.ref_name }}"
+
       - name: Build Python package
         run: hatch build
 
+      - name: List build artifacts
+        run: |
+          echo "Built packages:"
+          ls -la dist/
+
       - name: Publish to PyPI
         run: twine upload dist/* -u __token__ -p ${{ secrets.PYPI_TOKEN }}
+
 
       - name: Publish to GitHub Packages
         run: |
           twine upload \
             --repository-url https://upload.pypi.org/legacy/ \
-            dist/* \
-            -u __token__ \
-            -p ${{ secrets.PYPI_TOKEN }}
+            --username __token__ \
+            --password ${{ secrets.GITHUB_TOKEN }} \
+            dist/*
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ github.ref_name }}
-          skip_if_tag_exists: true
+          name: Release ${{ github.ref_name }}
           files: dist/*
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

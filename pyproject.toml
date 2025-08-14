@@ -36,7 +36,10 @@ Tracker = "https://github.com/dunzane/pipeai/issues"
 Source = "https://github.com/dunzane/pipeai"
 
 [project.scripts]
-moirai = "cli.main:app"
+pipeai = "cli.main:app"
+
+[tool.hatch.version]
+source = "vcs"
 
 [tool.hatch.version]
 path = "pipeai/version.py"
