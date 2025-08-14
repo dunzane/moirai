@@ -3,13 +3,11 @@ name: Build and Push Docker Images
 on:
   push:
     tags:
-      - 'v*'
+      - 'v*'   # 只匹配 v* 开头的 tag
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: github.ref_type == 'tag' && github.ref_name != '' && github.event.ref.startsWith('refs/tags/v') && github.head_ref == 'main'
-
 
     strategy:
       matrix:
@@ -27,11 +25,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Get version
-        id: get_version
+      - name: Check tag is on main branch
+        id: check_main
+        run: |
+          TAG_REF=${GITHUB_REF#refs/tags/}
+          echo "Checking if tag $TAG_REF is on main branch..."
+          git fetch origin main
+          if git merge-base --is-ancestor $TAG_REF origin/main; then
+            echo "Tag is on main branch, continue."
+          else
+            echo "Tag is not on main branch. Exiting."
+            exit 1
+          fi
+
+      - name: Set up environment variables
         run: |
           PIPEAI_VERSION=$(cd pipeai && python -c "from version import __version__; print(__version__)")
           echo "PIPEAI_VERSION=$PIPEAI_VERSION" >> $GITHUB_ENV
+
+      - name: Get version and image tag
+        run: |
           echo "IMAGE_TAG=${{ matrix.base-image-tag }}" >> $GITHUB_ENV
 
       - name: Login to DockerHub
@@ -46,8 +59,7 @@ jobs:
             --build-arg IMAGE_TAG=${IMAGE_TAG} \
             -t dunzane/pipeai:${PIPEAI_VERSION}-${IMAGE_TAG} \
             -t dunzane/pipeai:latest-${IMAGE_TAG} \
-            -f Dockerfile \
-            .
+            -f Dockerfile .
 
       - name: Push Docker image
         run: |
