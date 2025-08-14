@@ -2,7 +2,7 @@ import os
 import sys
 from argparse import ArgumentParser
 
-from moirai import launch_training
+from pipeai import launch_training
 
 
 def parse_args():

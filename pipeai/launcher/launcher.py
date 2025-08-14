@@ -2,10 +2,10 @@
 import traceback
 from typing import Callable, Dict, Union, Tuple
 
-from moirai.config import init_cfg
-from moirai.device import set_device_type,set_visible_devices
-from moirai.dist import is_master,dist_wrap
-from moirai.logging import get_logger
+from pipeai.config import init_cfg
+from pipeai.device import set_device_type,set_visible_devices
+from pipeai.dist import is_master,dist_wrap
+from pipeai.logging import get_logger
 
 
 def training_func(cfg: Dict):
@@ -18,12 +18,12 @@ def training_func(cfg: Dict):
     Args:
         cfg (Dict): Configuration dictionary.
     """
-    logger = get_logger('moirai-launcher')
+    logger = get_logger('pipeai-launcher')
     if is_master():
         logger.info(f'Initializing runner {cfg["RUNNER"]}')
 
     runner = cfg['RUNNER'](cfg)
-    runner.build_logger(logger_name='moirai-training', log_file_name='training_log')
+    runner.build_logger(logger_name='pipeai-training', log_file_name='training_log')
 
     try:
         runner.train()
@@ -42,7 +42,7 @@ def launch_training(cfg: Union[Dict, str], devices: str = None, node_rank: int =
         devices (str, optional): CUDA_VISIBLE_DEVICES setting.
         node_rank (int): Current node rank in distributed setting.
     """
-    logger = get_logger('moirai-launcher')
+    logger = get_logger('pipeai-launcher')
     logger.info('Launching Moirai training.')
 
     cfg = init_cfg(cfg, node_rank == 0)
@@ -89,7 +89,7 @@ def launch_runner(cfg: Union[Dict, str],
         device_type (str): One of ['cpu', 'gpu', 'mlu'].
         devices (str, optional): CUDA_VISIBLE_DEVICES setting.
     """
-    logger = get_logger('moirai-launcher')
+    logger = get_logger('pipeai-launcher')
     logger.info('Launching Moirai runner.')
 
     cfg = init_cfg(cfg, True)

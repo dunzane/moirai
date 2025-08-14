@@ -40,12 +40,12 @@ jobs:
         run: |
           docker build \
             --build-arg IMAGE_TAG=${IMAGE_TAG} \
-            -t dunzane/moirai:${MOIRAI_VERSION}-${IMAGE_TAG} \
-            -t dunzane/moirai:latest-${IMAGE_TAG} \
+            -t dunzane/pipeai:${MOIRAI_VERSION}-${IMAGE_TAG} \
+            -t dunzane/pipeai:latest-${IMAGE_TAG} \
             -f Dockerfile \
             .
 
       - name: Push Docker image
         run: |
-          docker push dunzane/moirai:${MOIRAI_VERSION}-${IMAGE_TAG}
-          docker push dunzane/moirai:latest-${IMAGE_TAG}
+          docker push dunzane/pipeai:${MOIRAI_VERSION}-${IMAGE_TAG}
+          docker push dunzane/pipeai:latest-${IMAGE_TAG}

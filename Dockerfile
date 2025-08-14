@@ -7,13 +7,13 @@ ARG MOIRAI_VERSION
 ENV MOIRAI_VERSION=${MOIRAI_VERSION}
 
 # --- Copy and install ---
-COPY . /tmp/moirai
+COPY . /tmp/pipeai
 
 RUN set -eux; \
-    cd /tmp/moirai && \
+    cd /tmp/pipeai && \
     pip install --upgrade pip && \
     pip install hatch && \
     rm -rf *.egg-info .eggs build dist && \
     hatch build && \
     pip install dist/*.whl && \
-    rm -rf /tmp/moirai
+    rm -rf /tmp/pipeai

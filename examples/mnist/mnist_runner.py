@@ -6,8 +6,8 @@ from torch import nn
 from torch.utils.data import Dataset
 
 from examples.mnist.conv_net import ConvNet
-from moirai import Runner, Config
-from moirai.device import to_device
+from pipeai import Runner, Config
+from pipeai.device import to_device
 
 
 class MNISTRunner(Runner):

@@ -1,6 +1,6 @@
 import logging
 
-from moirai.dist import is_master
+from pipeai.dist import is_master
 
 
 logger_initialized = set([])

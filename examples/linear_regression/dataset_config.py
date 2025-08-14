@@ -1,7 +1,7 @@
 import os
 
 from examples.linear_regression.linear_regression_runner import LinearRegressionRunner
-from moirai import Config
+from pipeai import Config
 
 CFG = Config()
 

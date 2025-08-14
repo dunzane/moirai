@@ -6,8 +6,8 @@ from typing import Iterator, Optional
 import torch
 from torch.utils.data import DataLoader
 
-from moirai.device import data_to_device
-from moirai import device
+from pipeai.device import data_to_device
+from pipeai import device
 
 
 class BackgroundGenerator(threading.Thread):

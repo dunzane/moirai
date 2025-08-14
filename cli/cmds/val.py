@@ -2,7 +2,7 @@ from typing import Optional
 
 import typer
 
-from moirai import Config, Runner, launch_runner
+from pipeai import Runner, launch_runner
 
 val_app = typer.Typer()
 
@@ -15,7 +15,7 @@ def run(
     devices: Optional[str] = typer.Option(None, "--devices", help="CUDA_VISIBLE_DEVICES"),
 ):
     def main(cfg_dict, runner: Runner, ckpt_path: Optional[str] = None):
-        runner.build_logger(logger_name='moirai-inference', log_file_name='validate_result')
+        runner.build_logger(logger_name='pipeai-inference', log_file_name='validate_result')
         runner.load_model(ckpt_path=ckpt_path)
         runner.validate(cfg_dict)
 

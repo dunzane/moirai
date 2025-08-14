@@ -5,7 +5,7 @@ from typing import Callable, Optional, Union, Dict, Any
 
 import torch
 
-from moirai.device import get_device_count, get_device_type, set_device_type, set_device
+from pipeai.device import get_device_count, get_device_type, set_device_type, set_device
 
 # default master rank
 MASTER_RANK = 0
