@@ -40,7 +40,7 @@ jobs:
       - name: Publish to GitHub Packages
         run: |
           twine upload \
-            --repository-url https://upload.pypi.org/legacy/ \
+            --repository github \
             --username __token__ \
             --password ${{ secrets.GITHUB_TOKEN }} \
             dist/*
