@@ -1,0 +1,47 @@
+name: Full Release Pipeline
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-publish:
+    name: Build and Publish
+    runs-on: ubuntu-latest
+    if: github.ref_type == 'tag' && github.ref_name != '' && github.event.ref.startsWith('refs/tags/v') && github.event.pusher && github.head_ref == 'main'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.8"
+
+      - name: Install build tools
+        run: |
+          pip install --upgrade hatch twine
+
+      - name: Build Python package using Hatch
+        run: hatch build
+
+      - name: Publish to PyPI
+        run: |
+          twine upload dist/* -u __token__ -p ${{ secrets.PYPI_TOKEN }}
+
+      - name: Publish to GitHub Packages
+        run: |
+          twine upload \
+            --repository-url https://upload.pypi.pkg.github.com/${{ github.repository_owner }}/ \
+            dist/* \
+            -u ${{ github.actor }} \
+            -p ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create GitHub Release and upload Python packages
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: dist/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

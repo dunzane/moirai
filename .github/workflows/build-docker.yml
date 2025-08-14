@@ -4,12 +4,12 @@ on:
   push:
     tags:
       - 'v*'
-    branches:
-      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    if: github.ref_type == 'tag' && github.ref_name != '' && github.event.ref.startsWith('refs/tags/v') && github.head_ref == 'main'
+
 
     strategy:
       matrix:
