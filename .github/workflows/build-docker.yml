@@ -1,11 +1,15 @@
 name: Build and Push Docker Images
 
-on: push
+on:
+  push:
+    tags:
+      - 'v*'
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/v') && github.ref_name == 'main'
 
     strategy:
       matrix:
@@ -26,8 +30,8 @@ jobs:
       - name: Get version
         id: get_version
         run: |
-          MOIRAI_VERSION=$(cd moirai && python -c "from version import __version__; print(__version__)")
-          echo "MOIRAI_VERSION=$MOIRAI_VERSION" >> $GITHUB_ENV
+          PIPEAI_VERSION=$(cd pipeai && python -c "from version import __version__; print(__version__)")
+          echo "PIPEAI_VERSION=$PIPEAI_VERSION" >> $GITHUB_ENV
           echo "IMAGE_TAG=${{ matrix.base-image-tag }}" >> $GITHUB_ENV
 
       - name: Login to DockerHub
@@ -40,12 +44,12 @@ jobs:
         run: |
           docker build \
             --build-arg IMAGE_TAG=${IMAGE_TAG} \
-            -t dunzane/pipeai:${MOIRAI_VERSION}-${IMAGE_TAG} \
+            -t dunzane/pipeai:${PIPEAI_VERSION}-${IMAGE_TAG} \
             -t dunzane/pipeai:latest-${IMAGE_TAG} \
             -f Dockerfile \
             .
 
       - name: Push Docker image
         run: |
-          docker push dunzane/pipeai:${MOIRAI_VERSION}-${IMAGE_TAG}
+          docker push dunzane/pipeai:${PIPEAI_VERSION}-${IMAGE_TAG}
           docker push dunzane/pipeai:latest-${IMAGE_TAG}
