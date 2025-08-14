@@ -3,7 +3,7 @@ name: Docker Build and Push (Strict Tag)
 on:
   push:
     tags:
-      - 'v*'  # 仅监听 v 开头的 Tag 推送
+      - 'v*'
 
 jobs:
   build:
@@ -13,14 +13,19 @@ jobs:
         base-image-tag:
           - "1.4.0-py3.8.13-cuda10.1-ubuntu18.04"
           - "1.5.1-py3.8.13-cuda10.2-ubuntu18.04"
-          # ... (其他基础镜像版本保持不变)
+          - "1.6.0-py3.8.13-cuda10.2-ubuntu18.04"
+          - "1.7.1-py3.9.12-cuda11.0-ubuntu18.04"
+          - "1.8.1-py3.9.12-cuda11.1-ubuntu20.04"
+          - "1.9.1-py3.9.12-cuda11.1-ubuntu20.04"
+          - "1.10.2-py3.9.12-cuda11.3.1-ubuntu20.04"
+          - "1.11.0-py3.9.12-cuda11.3.1-ubuntu20.04"
           - "1.12.1-py3.9.12-cuda11.6.2-ubuntu20.04"
 
+
     steps:
-      # 1. 优先验证 Tag 是否在 main 分支
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # 获取完整提交历史，确保分支验证准确
+          fetch-depth: 0
 
       - name: Verify tag is on main branch
         run: |
