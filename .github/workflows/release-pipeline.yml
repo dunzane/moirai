@@ -33,7 +33,9 @@ jobs:
         run: hatch build
 
       - name: Publish to PyPI
-        run: twine upload dist/* -u **token** -p ${{ secrets.PYPI_TOKEN }}
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_TOKEN }}
 
       - name: Publish to GitHub Packages
         run: |
