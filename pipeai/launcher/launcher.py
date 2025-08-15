@@ -43,7 +43,7 @@ def launch_training(cfg: Union[Dict, str], devices: str = None, node_rank: int =
         node_rank (int): Current node rank in distributed setting.
     """
     logger = get_logger('pipeai-launcher')
-    logger.info('Launching Moirai training.')
+    logger.info('Launching PipeAI training.')
 
     cfg = init_cfg(cfg, node_rank == 0)
 
@@ -90,7 +90,7 @@ def launch_runner(cfg: Union[Dict, str],
         devices (str, optional): CUDA_VISIBLE_DEVICES setting.
     """
     logger = get_logger('pipeai-launcher')
-    logger.info('Launching Moirai runner.')
+    logger.info('Launching pipeai runner.')
 
     cfg = init_cfg(cfg, True)
     set_device_type(device_type)

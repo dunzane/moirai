@@ -6,7 +6,7 @@ from pipeai import launch_training
 
 
 def parse_args():
-    parser = ArgumentParser(description='Welcome to Moirai!')
+    parser = ArgumentParser(description='Welcome to PipeAI!')
     parser.add_argument('-c', '--cfg', help='training config', required=True)
     parser.add_argument('--node-rank', default=0, type=int, help='node rank for distributed training')
     parser.add_argument('--devices', help='visible devices', type=str)

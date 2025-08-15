@@ -1,2 +1,2 @@
-# Moirai Example - MNIST Classification
+# PipeAI Example—MNIST Classification
 

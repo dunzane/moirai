@@ -4,8 +4,8 @@ from torch import nn, optim
 from torch.optim import lr_scheduler
 
 
-import pipeai.optim.custom.optim as moirai_optim
-import pipeai.optim.custom.lr_scheduler as moirai_lr_scheduler
+import pipeai.optim.custom.optim as pipeai_optim
+import pipeai.optim.custom.lr_scheduler as pipeai_lr_scheduler
 
 
 def build_optim(
@@ -49,8 +49,8 @@ def build_optim(
         if hasattr(optim, optim_type):
             optimizer_cls = getattr(optim, optim_type)
         # Fallback to custom optimizer module
-        elif hasattr(moirai_optim, optim_type):
-            optimizer_cls = getattr(moirai_optim, optim_type)
+        elif hasattr(pipeai_optim, optim_type):
+            optimizer_cls = getattr(pipeai_optim, optim_type)
         else:
             raise ValueError(f"Unknown optimizer type: '{optim_type}'. "
                              f"Neither torch.optim nor custom.optim has this class.")
@@ -96,7 +96,7 @@ def build_lr_scheduler(
     if not isinstance(scheduler_type, type):
         scheduler_type = (
             getattr(lr_scheduler, scheduler_type, None)
-            or getattr(moirai_lr_scheduler, scheduler_type)
+            or getattr(pipeai_lr_scheduler, scheduler_type)
         )
 
     scheduler_param = cfg['PARAM'].copy()
