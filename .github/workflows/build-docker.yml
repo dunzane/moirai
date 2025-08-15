@@ -57,3 +57,6 @@ jobs:
           
           docker push dunzane/pipeai:${PIPEAI_VERSION}-${IMAGE_TAG}
           docker push dunzane/pipeai:latest-${IMAGE_TAG}
+          
+          docker push ghcr.io/dunzane/pipeai:${PIPEAI_VERSION}-${IMAGE_TAG}
+          docker push ghcr.io/dunzane/pipeai:latest-${IMAGE_TAG}
