@@ -1,3 +1,5 @@
+# pylint: disable=invalid-name, inconsistent-quotes, unused-argument,
+# pylint: disable=function-redefined, use-implicit-booleaness-not-comparison
 import unittest
 import types
 import pytest
@@ -99,17 +101,14 @@ class TestRegistry(unittest.TestCase):
 
         REG = Registry('err')
 
-        # Non-callable object
         with pytest.raises(TypeError):
             REG.register_module(module="string")
 
-        # Invalid name type
         with pytest.raises(TypeError):
             @REG.register_module(name=123)
             def bad():
                 pass
 
-        # Duplicate registration without force
         @REG.register_module()
         def foo():
             pass
@@ -124,15 +123,12 @@ class TestRegistry(unittest.TestCase):
 
         MODS = Registry('mods')
 
-        # Successful import from full path
         cls = MODS.get("types.SimpleNamespace")
         assert cls is types.SimpleNamespace
 
-        # Non-existent class should return None
         res = MODS.get("types.DoesNotExist")
         assert res is None
 
-        # Key must be string
         with pytest.raises(TypeError):
             MODS.get(123)
 
