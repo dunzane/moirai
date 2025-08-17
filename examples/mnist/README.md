@@ -1,2 +1,0 @@
-# Moirai Example - MNIST Classification
-
