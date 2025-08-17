@@ -1,5 +1,5 @@
 import inspect
-from typing import Union, Optional, Any
+from typing import Union, Optional, Any, Dict
 
 from pipeai import Config
 from .registry import Registry
@@ -9,7 +9,7 @@ def build_from_cfg(cfg: Union[Config, dict],
                    registry: Registry,
                    default_args: Optional[Union[Config, dict]] = None) -> Any:
     from ..logging import get_logger
-    logger = get_logger('pipeai-registry')
+    logger = get_logger('pipeai-builder')
 
     if not isinstance(cfg, (Config, dict)):
         raise TypeError(f'cfg should be a dict or Config, got {type(cfg)}')
@@ -59,4 +59,8 @@ def build_from_cfg(cfg: Union[Config, dict],
     )
 
     return obj
+
+
+
+
 
