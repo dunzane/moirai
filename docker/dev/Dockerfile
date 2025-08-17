@@ -7,7 +7,7 @@ ARG MOIRAI_VERSION
 ENV MOIRAI_VERSION=${MOIRAI_VERSION}
 
 # --- Copy and install ---
-COPY . /tmp/pipeai
+COPY ../.. /tmp/pipeai
 
 RUN set -eux; \
     cd /tmp/pipeai && \

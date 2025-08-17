@@ -42,7 +42,7 @@ jobs:
             --build-arg IMAGE_TAG=${IMAGE_TAG} \
             -t dunzane/pipeai:${MOIRAI_VERSION}-${IMAGE_TAG} \
             -t dunzane/pipeai:latest-${IMAGE_TAG} \
-            -f Dockerfile \
+            -f docker/dev/Dockerfile \
             .
 
       - name: Push Docker image
