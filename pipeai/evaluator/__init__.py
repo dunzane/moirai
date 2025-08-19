@@ -1,3 +1,4 @@
-from .metric import MeterPool
+from .metric import MeterPool,AvgMeter
+from .evalutor import Evaluator
 
-__all__ = ['MeterPool']
+__all__ = ['Evaluator', 'AvgMeter']

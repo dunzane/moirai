@@ -25,6 +25,10 @@ DEFAULT_TRAINING_INDEPENDENT_KEYS = {
     'VAL'
 }
 
+MODULE_2_PACKAGE = {
+    'pipeai-forecast': 'pipeai-forecast'
+}
+
 
 def get_training_dependent_config(
         cfg: Dict,

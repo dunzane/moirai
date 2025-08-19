@@ -7,8 +7,7 @@ _DEFAULT_metric_LOGGER = get_logger('pipeai-metric')
 
 
 class AvgMeter(object):
-    """Average meter.
-    """
+    """Average meter."""
 
     def __init__(self):
         self._last = 0.
@@ -18,7 +17,6 @@ class AvgMeter(object):
     def reset(self):
         """Reset counter.
         """
-
         self._last = 0.
         self._sum = 0.
         self._count = 0
@@ -30,7 +28,6 @@ class AvgMeter(object):
             value (float): value.
             n (int): number.
         """
-
         self._last = value
         self._sum += value * n
         self._count += n
@@ -42,7 +39,6 @@ class AvgMeter(object):
         Returns:
             avg (float)
         """
-
         return self._sum / self._count if self._count != 0 else 0
 
     @property
@@ -52,7 +48,6 @@ class AvgMeter(object):
         Returns:
             last (float)
         """
-
         return self._last
 
 

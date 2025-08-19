@@ -47,10 +47,7 @@ class Runner:
         self.model = self.build_model(cfg)
 
         # Checkpoint related
-        self.ckpt_save_dir = get_ckpt_save_dir(cfg)
-        if not os.path.isdir(self.ckpt_save_dir):
-            os.makedirs(self.ckpt_save_dir)
-        self.logger.info(f"Set ckpt save dir: '{self.ckpt_save_dir}'")
+        self.ckpt_save_dir = None
         self.ckpt_save_strategy = None
 
         # Training state
