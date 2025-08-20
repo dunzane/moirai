@@ -1,3 +1,5 @@
+# pylint: disable=invalid-name, inconsistent-quotes, unused-argument,
+# pylint: disable=function-redefined, use-implicit-booleaness-not-comparison
 import logging
 import os
 import unittest
