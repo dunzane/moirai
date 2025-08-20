@@ -59,8 +59,3 @@ def build_from_cfg(cfg: Union[Config, dict],
     )
 
     return obj
-
-
-
-
-
