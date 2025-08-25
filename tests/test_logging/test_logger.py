@@ -6,17 +6,12 @@ import tempfile
 import os
 from unittest.mock import patch
 
-from pipeai.logging import get_logger, logger_initialized
+from pipeai.logging import get_logger
+import pipeai.logging.logger as plogger
 
 
 class TestGetLogger(unittest.TestCase):
     """Unit tests for the get_logger function"""
-
-    def setUp(self) -> None:
-        for name in list(logger_initialized):
-            logger = get_logger(name)
-            logger.handlers.clear()
-            logger_initialized.remove(name)
 
     @patch('pipeai.logging.logger.is_master', return_value=False)
     def test_stream_handler_added(self, mock_is_master):
@@ -56,4 +51,4 @@ class TestGetLogger(unittest.TestCase):
         logger1 = get_logger("reuse_logger")
         logger2 = get_logger("reuse_logger")
         assert logger1 is logger2
-        assert "reuse_logger" in logger_initialized
+        assert "reuse_logger" in plogger.logger_initialized
