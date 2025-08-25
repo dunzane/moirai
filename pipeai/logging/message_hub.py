@@ -64,7 +64,7 @@ class MessageHub:
         self.logger = get_logger("pipeai-message_hub")
 
     @property
-    def log_scalers(self) -> OrderedDict:
+    def log_scalars(self) -> OrderedDict:
         """Get all ``HistoryBuffer`` instances.
 
         Note:
@@ -234,7 +234,7 @@ class MessageHub:
         """
         return self._runtime_info.pop(key, default)
 
-    def get_scaler(self, key: str) -> HistoryBuffer:
+    def get_scalar(self, key: str) -> HistoryBuffer:
         """Get ``HistoryBuffer`` instance by key.
 
         Note:
@@ -251,7 +251,7 @@ class MessageHub:
         """
         if key not in self._log_scalars:
             raise KeyError(f'{key} is not found in Messagehub.log_buffers: '
-                           f'instance name is: {MessageHub.instance_name}')
+                           f'instance name is: {MessageHub.__class__.__name__}')
 
         return self.log_scalars[key]
 
@@ -312,7 +312,7 @@ class MessageHub:
             if self._resumed_keys.get(key, False):
                 try:
                     saved_info[key] = copy.deepcopy(value)
-                except (KeyError, TypeError):  # noqa: E722
+                except:  # noqa: E722
                     saved_info[key] = value
         return dict(
             log_scalars=saved_scalars,
