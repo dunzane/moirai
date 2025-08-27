@@ -4,10 +4,12 @@ from typing import Optional, Union, Dict, Tuple
 from numpy import inf, isfinite
 
 from .hook import Hook
+from pipeai.registry import HOOKS
 
 DATA_BATCH = Optional[Union[dict, tuple, list]]
 
 
+@HOOKS.register_module()
 class EarlyStoppingHook(Hook):
     """Early stops training when a monitored metric has stopped improving.
 
