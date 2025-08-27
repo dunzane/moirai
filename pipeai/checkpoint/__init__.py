@@ -1,9 +1,7 @@
-from .checkpoint import (get_ckpt_save_dir,
-                         backup_last_ckpt,
-                         save_ckpt,
-                         clear_ckpt,load_ckpt)
+from .checkpoint import (save_checkpoint,load_checkpoint,
+                         get_ckpt_save_dir,get_last_ckpt_path,load_ckpt,save_ckpt,
+                         need_to_remove_last_ckpt,backup_last_ckpt,clear_ckpt)
 
-
-__all__ = ['get_ckpt_save_dir','backup_last_ckpt',
-           'save_ckpt','clear_ckpt','load_ckpt']
-
+__all__ = ['save_checkpoint','load_checkpoint',
+           'get_ckpt_save_dir','get_last_ckpt_path','load_ckpt','save_ckpt',
+           'need_to_remove_last_ckpt','backup_last_ckpt','clear_ckpt']

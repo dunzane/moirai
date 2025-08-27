@@ -3,6 +3,7 @@ import os
 import re
 import glob
 import shutil
+import os.path as osp
 from logging import Logger
 from typing import Dict, List, Tuple, Union, Optional
 
@@ -11,6 +12,42 @@ import torch
 from pipeai.logging import get_logger
 
 _DEFAULT_CKPT_LOGGER = get_logger('pipeai-checkpoint')
+
+
+def save_checkpoint(checkpoint, filename: str):
+    """Save checkpoint to local file.
+
+    Args:
+        checkpoint (dict): Module whose params are to be saved.
+        filename (str): Checkpoint filename.
+    """
+    if filename.startswith('pavi://'):
+        raise ValueError(
+            'Saving to "pavi://" is not supported in this simplified version.'
+        )
+
+    dirpath = osp.dirname(filename)
+    if dirpath:
+        os.makedirs(dirpath, exist_ok=True)
+
+    torch.save(checkpoint, filename)
+
+
+def load_checkpoint(filename, map_location='cpu'):
+    """Load checkpoint by local file path.
+
+    Args:
+        filename (str): local checkpoint file path
+        map_location (str, optional): Same as :func:`torch.load`.
+
+    Returns:
+        dict or OrderedDict: The loaded checkpoint.
+    """
+    filename = osp.expanduser(filename)
+    if not osp.isfile(filename):
+        raise FileNotFoundError(f'{filename} can not be found.')
+    checkpoint = torch.load(filename, map_location=map_location)
+    return checkpoint
 
 
 def get_ckpt_save_dir(cfg: Dict):
