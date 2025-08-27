@@ -13,10 +13,12 @@ import torch
 from .hook import Hook
 from pipeai.utils import is_list_of, is_seq_of
 from pipeai.dist import is_main_process, master_only
+from pipeai.registry import HOOKS
 
 DATA_BATCH = Optional[Union[dict, tuple, list]]
 
 
+@HOOKS.register_module()
 class CheckpointHook(Hook):
     """Saves checkpoints periodically to the local filesystem.
 
@@ -134,7 +136,8 @@ class CheckpointHook(Hook):
                 self.best_ckpt_path_dict: Dict[str, Optional[str]] = {}
 
         if not (isinstance(published_keys, str) or is_seq_of(published_keys, str) or published_keys is None):
-            raise TypeError(f'"published_keys" must be a str, a sequence of str, or None, but got {type(published_keys)}')
+            raise TypeError(
+                f'"published_keys" must be a str, a sequence of str, or None, but got {type(published_keys)}')
         if isinstance(published_keys, str):
             published_keys = [published_keys]
         elif isinstance(published_keys, (list, tuple)):
@@ -195,7 +198,7 @@ class CheckpointHook(Hook):
             return
 
         if self.every_n_train_iters(runner, self.interval, self.save_begin) or \
-           (self.save_last and self.is_last_train_iter(runner)):
+                (self.save_last and self.is_last_train_iter(runner)):
             runner.logger.info(f'Saving checkpoint at iteration {runner.iter + 1}')
             self._save_checkpoint(runner)
 
@@ -209,7 +212,7 @@ class CheckpointHook(Hook):
             return
 
         if self.every_n_epochs(runner, self.interval, self.save_begin) or \
-           (self.save_last and self.is_last_train_epoch(runner)):
+                (self.save_last and self.is_last_train_epoch(runner)):
             runner.logger.info(f'Saving checkpoint at epoch {runner.epoch + 1}')
             self._save_checkpoint(runner)
 
