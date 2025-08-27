@@ -115,7 +115,7 @@ class Hook:
         Args:
             runner (Runner): The runner of the training process.
         """
-        self._before_epoch(runner, mode='train')
+        self._before_epoch(runner, stage='train')
 
     def before_val_epoch(self, runner) -> None:
         """All subclasses should override this method if they need any
@@ -124,7 +124,7 @@ class Hook:
         Args:
             runner (Runner): The runner of the validation process.
         """
-        self._before_epoch(runner, mode='val')
+        self._before_epoch(runner, stage='val')
 
     def before_test_epoch(self, runner) -> None:
         """All subclasses should override this method if they need any
@@ -133,7 +133,7 @@ class Hook:
         Args:
             runner (Runner): The runner of the testing process.
         """
-        self._before_epoch(runner, mode='test')
+        self._before_epoch(runner, stage='test')
 
     def after_train_epoch(self, runner) -> None:
         """All subclasses should override this method if they need any
@@ -142,7 +142,7 @@ class Hook:
         Args:
             runner (Runner): The runner of the training process.
         """
-        self._after_epoch(runner, mode='train')
+        self._after_epoch(runner, stage='train')
 
     def after_val_epoch(self,
                         runner,
@@ -156,7 +156,7 @@ class Hook:
                 metrics on validation dataset. The keys are the names of the
                 metrics, and the values are corresponding results.
         """
-        self._after_epoch(runner, mode='val')
+        self._after_epoch(runner, stage='val')
 
     def after_test_epoch(self,
                          runner,
@@ -170,7 +170,7 @@ class Hook:
                 metrics on test dataset. The keys are the names of the
                 metrics, and the values are corresponding results.
         """
-        self._after_epoch(runner, mode='test')
+        self._after_epoch(runner, stage='test')
 
     def before_train_iter(self,
                           runner,
@@ -185,7 +185,7 @@ class Hook:
             data_batch (dict or tuple or list, optional): Data from dataloader.
         """
         self._before_iter(
-            runner, batch_idx=batch_idx, data_batch=data_batch, mode='train')
+            runner, batch_idx=batch_idx, data_batch=data_batch, stage='train')
 
     def before_val_iter(self,
                         runner,
@@ -201,7 +201,7 @@ class Hook:
                 Defaults to None.
         """
         self._before_iter(
-            runner, batch_idx=batch_idx, data_batch=data_batch, mode='val')
+            runner, batch_idx=batch_idx, data_batch=data_batch, stage='val')
 
     def before_test_iter(self,
                          runner,
@@ -217,7 +217,7 @@ class Hook:
                 Defaults to None.
         """
         self._before_iter(
-            runner, batch_idx=batch_idx, data_batch=data_batch, mode='test')
+            runner, batch_idx=batch_idx, data_batch=data_batch, stage='test')
 
 
     def after_train_iter(self,
@@ -239,7 +239,7 @@ class Hook:
             batch_idx=batch_idx,
             data_batch=data_batch,
             outputs=outputs,
-            mode='train')
+            stage='train')
 
     def after_val_iter(self,
                        runner,
@@ -260,7 +260,7 @@ class Hook:
             batch_idx=batch_idx,
             data_batch=data_batch,
             outputs=outputs,
-            mode='val')
+            stage='val')
 
     def after_test_iter(self,
                         runner,
@@ -281,33 +281,33 @@ class Hook:
             batch_idx=batch_idx,
             data_batch=data_batch,
             outputs=outputs,
-            mode='test')
+            stage='test')
 
-    def _before_epoch(self, runner, mode: str = 'train') -> None:
+    def _before_epoch(self, runner, stage: str = 'train') -> None:
         """All subclasses should override this method if they need any
         operations before each epoch.
 
         Args:
             runner (Runner): The runner of the training, validation or testing
                 process.
-            mode (str): Current mode of runner. Defaults to 'train'.
+            stage (str): Current stage of runner. Defaults to 'train'.
         """
 
-    def _after_epoch(self, runner, mode: str = 'train') -> None:
+    def _after_epoch(self, runner, stage: str = 'train') -> None:
         """All subclasses should override this method if they need any
         operations after each epoch.
 
         Args:
             runner (Runner): The runner of the training, validation or testing
                 process.
-            mode (str): Current mode of runner. Defaults to 'train'.
+            stage (str): Current stage of runner. Defaults to 'train'.
         """
 
     def _before_iter(self,
                      runner,
                      batch_idx: int,
                      data_batch: DATA_BATCH = None,
-                     mode: str = 'train') -> None:
+                     stage: str = 'train') -> None:
         """All subclasses should override this method if they need any
         operations before each iter.
 
@@ -316,7 +316,7 @@ class Hook:
                 process.
             batch_idx (int): The index of the current batch in the loop.
             data_batch (dict or tuple or list, optional): Data from dataloader.
-            mode (str): Current mode of runner. Defaults to 'train'.
+            stage (str): Current stage of runner. Defaults to 'train'.
         """
 
     def _after_iter(self,
@@ -324,7 +324,7 @@ class Hook:
                     batch_idx: int,
                     data_batch: DATA_BATCH = None,
                     outputs: Optional[Union[Sequence, dict]] = None,
-                    mode: str = 'train') -> None:
+                    stage: str = 'train') -> None:
         """All subclasses should override this method if they need any
         operations after each epoch.
 
@@ -334,7 +334,7 @@ class Hook:
             batch_idx (int): The index of the current batch in the loop.
             data_batch (dict or tuple or list, optional): Data from dataloader.
             outputs (dict or Sequence, optional): Outputs from a model.
-            mode (str): Current mode of runner. Defaults to 'train'.
+            stage (str): Current stage of runner. Defaults to 'train'.
         """
 
     def every_n_epochs(self, runner, n: int, start: int = 0) -> bool:
