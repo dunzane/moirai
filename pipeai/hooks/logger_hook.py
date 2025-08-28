@@ -1,18 +1,17 @@
-import logging
 import os
+import numpy as np
 from json import dump
 from pathlib import Path
 import os.path as osp
 from typing import Optional, Union, Sequence, Dict, OrderedDict
 
-import numpy as np
 import torch
 
-from pipeai.hooks import Hook
+from pipeai.hooks import Hook,DATA_BATCH
 from pipeai.registry import HOOKS
 from pipeai.utils import is_seq_of
 
-DATA_BATCH = Optional[Union[dict, tuple, list]]
+
 SUFFIX_TYPE = Union[Sequence[str], str]
 
 
