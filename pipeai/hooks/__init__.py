@@ -6,7 +6,9 @@ from .iter_timer_hook import IterTimerHook
 from .logger_hook import LoggerHook
 from .naive_visualization_hook import NaiveVisualizationHook
 from .param_scheduler_hook import ParamSchedulerHook
+from .profiler_hook import ProfilerHook
 
 ___all__ = ['DATA_BATCH',
             'Hook', 'CheckpointHook', 'EarlyStoppingHook', 'IterTimerHook',
-            'LoggerHook','NaiveVisualizationHook', 'ParamSchedulerHook',]
+            'LoggerHook','NaiveVisualizationHook', 'ParamSchedulerHook',
+            'ProfilerHook']
