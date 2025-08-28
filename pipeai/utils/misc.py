@@ -41,3 +41,12 @@ def is_list_of(seq, expected_type):
     A partial method of: func:`is_seq_of`.
     """
     return is_seq_of(seq, expected_type, seq_type=list)
+
+
+def is_str(x):
+    """Whether the input is a string instance.
+
+    Note: This method is deprecated since python 2 is no longer supported.
+    """
+    return isinstance(x, str)
+

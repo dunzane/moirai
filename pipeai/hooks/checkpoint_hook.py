@@ -10,12 +10,10 @@ from typing import Dict, Optional, Union, List, Sequence, Callable
 
 import torch
 
-from .hook import Hook
+from pipeai.hooks import Hook, DATA_BATCH
 from pipeai.utils import is_list_of, is_seq_of
 from pipeai.dist import is_main_process, master_only
 from pipeai.registry import HOOKS
-
-DATA_BATCH = Optional[Union[dict, tuple, list]]
 
 
 @HOOKS.register_module()
@@ -25,6 +23,38 @@ class CheckpointHook(Hook):
     This hook provides functionality to save checkpoints at regular intervals,
     track and save the best-performing models based on validation metrics,
     manage the total number of checkpoints, and publish cleaned model files.
+
+    Args:
+        interval (int): The saving interval. Defaults to -1 (no saving).
+        by_epoch (bool): If True, saves every `interval` epochs. Otherwise,
+            saves every `interval` iteration. Defaults to True.
+        save_optimizer (bool): Whether to save the optimizer's state dict.
+            Defaults to True.
+        save_param_scheduler (bool): Whether to save the parameter
+            scheduler's state dict. Defaults to True.
+        out_dir (str or Path, optional): Directory to save checkpoints.
+            If None, uses `runner.work_dir`. Defaults to None.
+        max_keep_ckpts (int): The maximum number of checkpoints to keep.
+            -1 means no limit. Defaults to -1.
+        save_last (bool): Whether to save a final checkpoint at the end of
+            training. Defaults to True.
+        save_best (str or List[str], optional): Metric name(s) to use for
+            saving the best checkpoint. Use 'auto' to automatically select
+            the first metric. Defaults to None.
+        rule (str or List[str], optional): Comparison rule for `save_best`.
+            Options are 'greater' or 'less'. If None, the rule is inferred
+            from the metric name. Defaults to None.
+        greater_keys (Sequence[str], optional): Metric keys that should use
+            the 'greater' rule by default.
+        less_keys (Sequence[str], optional): Metric keys that should use
+            the 'less' rule by default.
+        filename_tmpl (str, optional): Template for checkpoint filenames.
+            Defaults to 'epoch_{}.pth' or 'iter_{}.pth'.
+        published_keys (str or List[str], optional): Keys to keep when
+            publishing the model. If None, no publishing is done.
+        save_begin (int): The step (epoch or iter) to start saving
+            checkpoints. Defaults to 0.
+        **kwargs: Additional arguments for `runner.save_checkpoint`.
     """
 
     priority = 'VERY_LOW'
@@ -54,40 +84,6 @@ class CheckpointHook(Hook):
                  published_keys: Union[str, List[str], None] = None,
                  save_begin: int = 0,
                  **kwargs) -> None:
-        """Initializes the CheckpointHook.
-
-        Args:
-            interval (int): The saving interval. Defaults to -1 (no saving).
-            by_epoch (bool): If True, saves every `interval` epochs. Otherwise,
-                saves every `interval` iterations. Defaults to True.
-            save_optimizer (bool): Whether to save the optimizer's state dict.
-                Defaults to True.
-            save_param_scheduler (bool): Whether to save the parameter
-                scheduler's state dict. Defaults to True.
-            out_dir (str or Path, optional): Directory to save checkpoints.
-                If None, uses `runner.work_dir`. Defaults to None.
-            max_keep_ckpts (int): The maximum number of checkpoints to keep.
-                -1 means no limit. Defaults to -1.
-            save_last (bool): Whether to save a final checkpoint at the end of
-                training. Defaults to True.
-            save_best (str or List[str], optional): Metric name(s) to use for
-                saving the best checkpoint. Use 'auto' to automatically select
-                the first metric. Defaults to None.
-            rule (str or List[str], optional): Comparison rule for `save_best`.
-                Options are 'greater' or 'less'. If None, the rule is inferred
-                from the metric name. Defaults to None.
-            greater_keys (Sequence[str], optional): Metric keys that should use
-                the 'greater' rule by default.
-            less_keys (Sequence[str], optional): Metric keys that should use
-                the 'less' rule by default.
-            filename_tmpl (str, optional): Template for checkpoint filenames.
-                Defaults to 'epoch_{}.pth' or 'iter_{}.pth'.
-            published_keys (str or List[str], optional): Keys to keep when
-                publishing the model. If None, no publishing is done.
-            save_begin (int): The step (epoch or iter) to start saving
-                checkpoints. Defaults to 0.
-            **kwargs: Additional arguments for `runner.save_checkpoint`.
-        """
         super().__init__()
         self.interval = interval
         self.by_epoch = by_epoch

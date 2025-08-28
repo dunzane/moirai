@@ -11,7 +11,7 @@ def autocast(device_type: Optional[str] = None,
     """Simplified autocast wrapper for PyTorch >= 1.10.
 
     This wrapper provides a unified interface for mixed-precision training
-    with CPU or CUDA devices. Other device backends (MLU, NPU, MUSA, etc.)
+    with CPU or CUDA devices. Other device backends- (MLU, NPU, MUSA, etc.)
     are not supported in this simplified version.
 
     Args:

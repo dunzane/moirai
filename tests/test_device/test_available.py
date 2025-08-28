@@ -27,9 +27,9 @@ class TestDeviceAvailable(unittest.TestCase):
             def is_available():
                 return False
 
-        with patch("torch.backends.mps", new=MockMPS):
+        with patch("torch.backends-.mps", new=MockMPS):
             self.assertTrue(pdevice.is_mps_available())
-        with patch("torch.backends.mps", new=MockMPS2):
+        with patch("torch.backends-.mps", new=MockMPS2):
             self.assertFalse(pdevice.is_mps_available())
 
 

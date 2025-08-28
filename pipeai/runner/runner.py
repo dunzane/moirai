@@ -17,7 +17,7 @@ from pipeai.checkpoint import get_ckpt_save_dir, backup_last_ckpt, save_ckpt, cl
 from pipeai.config import Config
 from pipeai.data import build_data_loader_ddp, build_data_loader, DevicePrefetcher
 from pipeai.dist import get_local_rank, master_only, is_master
-from pipeai.evaluator import MeterPool
+# from pipeai.evaluator import MeterPool
 from pipeai.logging import get_logger
 from pipeai.optim.builder import build_optim, build_lr_scheduler
 from pipeai.utils import set_env

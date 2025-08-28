@@ -35,15 +35,14 @@ class LogProcessor:
 
         self._check_custom_cfg()
 
-    def get_log_after_iter(self, runner, batch_idx: int,
-                           stage: str) -> Tuple[dict, str]:
+    def get_log_after_iter(self, runner, batch_idx: int, stage: str) -> Tuple[dict, str]:
         """Format log string after training, validation or testing iteration.
 
         Args:
             runner (Runner): The runner of training phase.
             batch_idx (int): The index of the current batch in the current
                 loop.
-            mode (str): Current mode of runner, train, test or val.
+            stage (str): Current mode of runner, train, test or val.
 
         Return:
             Tuple[dict, str]: Formatted log dict/string which will be
@@ -213,7 +212,7 @@ class LogProcessor:
             custom_cfg_copy.append(
                 dict(data_src='data_time', window_size='epoch', method_name='mean'))
         parsed_cfg = self._parse_windows_size(runner, batch_idx, custom_cfg_copy)
-        # tag is used to write log information to different backends.
+        # tag is used to write log information to different backends-.
         ori_tag = self._collect_scalars(runner, parsed_cfg, stage, self.log_with_hierarchy)
         non_scalar_tag = self._collect_non_scalars(runner, stage)
         tag = OrderedDict()

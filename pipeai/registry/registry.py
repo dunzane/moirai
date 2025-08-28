@@ -6,9 +6,10 @@ from contextlib import contextmanager
 from importlib import import_module
 from typing import Optional, Callable, List, Dict, Type, Generator, Any, Tuple, Union
 
-from .default_scope import SimpleScopeManager
 from pipeai.config import MODULE_2_PACKAGE
 from pipeai.utils import is_seq_of
+from .default_scope import SimpleScopeManager
+# from .build_functions import build_from_cfg
 
 
 class Registry:
@@ -19,10 +20,10 @@ class Registry:
                  build_func: Optional[Callable] = None,
                  scope: Optional[str] = None,
                  locations: Optional[List[str]] = None) -> None:
+        from pipeai.logging import get_logger
         from .build_functions import build_from_cfg
-        from ..logging import get_logger
+        self.logger = get_logger(f'pipeai-{__class__.__name__}')
 
-        self.logger = get_logger('pipeai-registry')
         self._name = name
         self._module_dict: Dict[str, Type] = {}
         self._children: Dict[str, 'Registry'] = {}

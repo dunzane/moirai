@@ -40,7 +40,7 @@ class TestDevice(unittest.TestCase):
         mock_device_count.return_value = 0
         self.assertEqual(pdevice.get_device_count(), 0)
 
-    @patch("torch.backends", new_callable=Mock)
+    @patch("torch.backends-", new_callable=Mock)
     def test_get_device_count_mps(self, mock_backends):
         pdevice.set_device_type("mps")
 
@@ -198,7 +198,7 @@ class TestGetDeviceInfo(unittest.TestCase):
 
     def test_get_device_info_mps(self):
         pdevice.set_device_type("mps")
-        with patch("torch.backends", create=True) as mock_backends:
+        with patch("torch.backends-", create=True) as mock_backends:
             mock_backends.mps.is_available.return_value = True
             info = pdevice.get_device_info()
 

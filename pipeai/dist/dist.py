@@ -4,25 +4,41 @@ import random
 from typing import Callable, Optional, Union, Dict, Any
 
 import torch
+from torch.distributed import ProcessGroup
+from torch import distributed as torch_dist
 
 from pipeai.device import get_device_count, get_device_type, set_device_type, set_device
+from .utils import is_distributed, get_default_group
 
 # default master rank
 MASTER_RANK = 0
 
 
-def get_rank() -> int:
-    """Get the rank of the current process group.
+def get_rank(group: Optional[ProcessGroup] = None) -> int:
+    """Return the rank of the given process group.
 
-    If DDP is initialized, return `torch.distributed.get_rank()`.
-    Else return 0
+    Rank is a unique identifier assigned to each process within a distributed
+    process group. They are always consecutive integers ranging from 0 to
+    ``world_size``.
+
+    Note:
+        Calling ``get_rank`` in non-distributed environment will return 0.
+
+    Args:
+        group (ProcessGroup, optional): The process group to work on. If None,
+            the default process group will be used. Defaults to None.
 
     Returns:
-        rank (int)
+        int: Return the rank of the process group if in distributed
+        environment, otherwise 0.
     """
 
-    if torch.distributed.is_initialized():
-        return torch.distributed.get_rank()
+    if is_distributed():
+        # handle low versions of torch like 1.5.0 which does not support
+        # passing in None for group argument
+        if group is None:
+            group = get_default_group()
+        return torch_dist.get_rank(group)
     else:
         return 0
 
@@ -82,29 +98,6 @@ def is_master() -> bool:
     """
 
     return is_rank(MASTER_RANK)
-
-
-def master_only(func):
-    """A function decorator that the function is only executed in the master process.
-
-    Examples:
-        @master_only
-        def func(x):
-            return 2 ** x
-
-    Args:
-        func: function
-
-    Returns:
-        wrapper func
-    """
-
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-        if is_master():
-            return func(*args, **kwargs)
-
-    return wrapper
 
 
 def dist_wrap(
@@ -193,3 +186,17 @@ def _check_dist_args(node_num: int, device_num: int, node_rank: int):
             f"Mismatch in device count: expected {device_num}, "
             f"but torch.cuda.device_count() = {get_device_count()}."
         )
+
+
+def is_main_process(group: Optional[ProcessGroup] = None) -> bool:
+    """Whether the current rank of the given process group is equal to 0.
+
+    Args:
+        group (ProcessGroup, optional): The process group to work on. If None,
+            the default process group will be used. Defaults to None.
+
+    Returns:
+        bool: Return True if the current rank of the given process group is
+        equal to 0, otherwise False.
+    """
+    return get_rank(group) == 0

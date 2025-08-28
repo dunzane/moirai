@@ -1,10 +1,8 @@
 import time
 from typing import Optional, Union, Sequence
 
-from .hook import Hook
+from pipeai.hooks import Hook, DATA_BATCH
 from pipeai.registry import HOOKS
-
-BatchData = Optional[Union[dict, tuple, list]]
 
 
 @HOOKS.register_module()
@@ -42,7 +40,7 @@ class IterTimerHook(Hook):
             self,
             runner,
             batch_idx: int,
-            data_batch: BatchData = None,
+            data_batch: DATA_BATCH = None,
             stage: str = 'train'
     ) -> None:
         """Log the time taken to load the current batch of data."""
@@ -54,7 +52,7 @@ class IterTimerHook(Hook):
             self,
             runner,
             batch_idx: int,
-            data_batch: BatchData = None,
+            data_batch: DATA_BATCH = None,
             outputs: Optional[Union[dict, Sequence]] = None,
             stage: str = 'train'
     ) -> None:
