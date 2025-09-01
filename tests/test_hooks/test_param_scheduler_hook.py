@@ -1,3 +1,5 @@
+# pylint: disable=invalid-name, inconsistent-quotes, unused-argument,
+# pylint: disable=function-redefined, use-implicit-booleaness-not-comparison
 import unittest
 from unittest.mock import MagicMock, patch
 from torch.optim import lr_scheduler
