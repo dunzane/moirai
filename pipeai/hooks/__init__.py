@@ -1,5 +1,5 @@
 from .utils import DATA_BATCH
-from .hook import Hook
+from .base import Hook
 from .checkpoint_hook import CheckpointHook
 from .early_stopping_hook import EarlyStoppingHook
 from .iter_timer_hook import IterTimerHook

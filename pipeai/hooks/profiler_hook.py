@@ -1,7 +1,7 @@
 import torch
 from torch.profiler import profile, record_function, ProfilerActivity
 
-from .hook import Hook
+from .base import Hook
 
 
 class ProfilerHook(Hook):
