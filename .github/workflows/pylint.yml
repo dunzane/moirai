@@ -3,7 +3,10 @@ name: PyLint
 env:
   FAIL_UNDER: "9.9"
 
-on: [push, pull_request]
+on:
+  push:
+    tags:
+      - "v*"
 
 jobs:
   build:
